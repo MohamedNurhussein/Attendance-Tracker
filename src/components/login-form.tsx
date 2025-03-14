@@ -14,10 +14,12 @@ import Link from "next/link";
 import { useState } from "react";
 import auth from "@/firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from "next/navigation";
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -31,6 +33,8 @@ export function LoginForm({
         password
       );
       console.log("successfully logged in");
+      //redirect to dashboard
+      router.push("/dashboard")
     } catch (err) {
       switch (err.code) {
         case "auth/invalid-email":
