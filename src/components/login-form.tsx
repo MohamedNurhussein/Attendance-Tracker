@@ -25,6 +25,8 @@ export function LoginForm({
   const [error, setError] = useState("");
   const handleLogin = async (e) => {
     e.preventDefault();
+    //clear error message
+    setError("");
     try {
       //login to account
       await signInWithEmailAndPassword(
