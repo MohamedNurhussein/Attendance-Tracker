@@ -12,31 +12,26 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
-import auth from "@/firebase/auth";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
   const handleLogin = async (e) => {
     e.preventDefault();
     //clear error message
     setError("");
+    //starts loading
+    setIsLoading(true);
     try {
       //login to account
-      await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      await login(email, password);
       console.log("successfully logged in");
-      //redirect to dashboard
-      router.push("/dashboard")
     } catch (err) {
       switch (err.code) {
         case "auth/invalid-email":
@@ -70,6 +65,8 @@ export function LoginForm({
           setError("An error occurred. Please try again later.");
           break;
       }
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -82,7 +79,7 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleLogin}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
@@ -107,8 +104,8 @@ export function LoginForm({
               </div>
               {error && <p className="text-red-500">{error}</p>}
               <div className="flex flex-col gap-3">
-                <Button type="submit" onClick={handleLogin} className="w-full">
-                  Login
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? "Loading" : "Login"}
                 </Button>
               </div>
             </div>
