@@ -12,32 +12,26 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
-import auth  from "../firebase/auth";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { useAuth } from "@/context/AuthContext";
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const { signup } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const handleSignup = async (e)=> {
+  const [isLoading, setIsLoading] = useState(false);
+  const handleSignup = async (e) => {
     e.preventDefault();
+    //clear error message
+    setError("");
+    //start loading
+    setIsLoading(true);
     try {
-      //create account
-      const userCredential =await createUserWithEmailAndPassword(auth, email, password)
-      
-      const user = userCredential.user;
-      //update user name
-      await updateProfile(user,{
-        displayName: name,
-      })
-      console.log("account been created successfully")
-      //add data to server side
-
-      //redirect to dashboard
-
+      await signup(name, email, password);
+      console.log("account been created successfully");
     } catch (err) {
       switch (err.code) {
         case "auth/invalid-email":
@@ -71,8 +65,11 @@ export function SignupForm({
           setError("An error occurred. Please try again later.");
           break;
       }
+    } finally {
+      //stop loading
+      setIsLoading(false);
     }
-  }
+  };
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -83,7 +80,7 @@ export function SignupForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSignup}>
             <div className="flex flex-col gap-6">
               <Label htmlFor="name">Name</Label>
               <Input
@@ -116,8 +113,8 @@ export function SignupForm({
               </div>
               {error && <p className="text-red-500">{error}</p>}
               <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full" onClick={handleSignup}>
-                  Sign up
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? "loading..." : "Sign up"}
                 </Button>
               </div>
             </div>
