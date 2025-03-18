@@ -7,11 +7,11 @@ export default function Page() {
     <div className="flex min-h-svh w-full items-center justify-center p-3 md:p-10">
       <div className="w-full max-w-sm">
         <ComboboxForm />
+        <UserTable />
       </div>
       <div>
-        <Button>Attendance History</Button>
+        {/* <Button>Attendance History</Button> */}
         {/* <AdminTable /> */}
-        <UserTable />
       </div>
     </div>
   );
