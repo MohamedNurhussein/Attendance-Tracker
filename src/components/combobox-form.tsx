@@ -32,14 +32,14 @@ import {
 } from "@/components/ui/popover";
 
 const Classes = [
-  { label: "Class A", value: "Class A" },
-  { label: "Class B", value: "Class B" },
-  { label: "Class C", value: "Class C" },
-  { label: "Class D", value: "Class D" },
-  { label: "Class E", value: "Class E" },
-  { label: "Class F", value: "Class F" },
-  { label: "Class G", value: "Class G" },
-  { label: "Class H", value: "Class H" },
+  { name: "Class A", value: "Class A" },
+  { name: "Class B", value: "Class B" },
+  { name: "Class C", value: "Class C" },
+  { name: "Class D", value: "Class D" },
+  { name: "Class E", value: "Class E" },
+  { name: "Class F", value: "Class F" },
+  { name: "Class G", value: "Class G" },
+  { name: "Class H", value: "Class H" },
 ] as const;
 
 const FormSchema = z.object({
@@ -86,7 +86,7 @@ export function ComboboxForm() {
                       {field.value
                         ? Classes.find(
                             (Class) => Class.value === field.value
-                          )?.label
+                          )?.name
                         : "Select Class"}
                       <ChevronsUpDown className="opacity-50" />
                     </Button>
@@ -103,13 +103,13 @@ export function ComboboxForm() {
                       <CommandGroup>
                         {Classes.map((Class) => (
                           <CommandItem
-                            value={Class.label}
+                            value={Class.name}
                             key={Class.value}
                             onSelect={() => {
                               form.setValue("Class", Class.value);
                             }}
                           >
-                            {Class.label}
+                            {Class.name}
                             <Check
                               className={cn(
                                 "ml-auto",

@@ -1,5 +1,5 @@
-import { Records, columns } from "./user-columns";
-import { DataTable } from "./user-data-table";
+import { Records, columns } from "./student-columns";
+import { DataTable } from "./student-data-table";
 
 async function getData(): Promise<Records[]> {
   // Fetch data from your API here.
