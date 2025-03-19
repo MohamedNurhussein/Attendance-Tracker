@@ -1,6 +1,6 @@
 import { ComboboxForm } from "@/components/combobox-form";
 import AdminTable from "../../records/admin-table";
-import UserTable from "../../records/user-table";
+import UserTable from "../../records/student-table";
 import { Button } from "@/components/ui/button";
 export default function Page() {
   return (

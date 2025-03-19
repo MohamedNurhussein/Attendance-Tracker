@@ -5,12 +5,13 @@ export const handler = async (event) => {
     const { userId } = JSON.parse(event.body);
 
     //get refrence to user's data
-    const userRef = db.ref(`users/${userId}/userData`);
+    const userRef = db.ref(`users/${userId}/role`);
 
     //listen for "value" event once and get a snapshot
     const snapshot = await userRef.once("value");
     //get role
-    const [name, email, role] = Object.values(snapshot.val());
+    const role = snapshot.val();
+    
     //return response
     return {
       statusCode: 200,

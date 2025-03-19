@@ -6,12 +6,12 @@ export const handler = async (event) => {
     const { userId, name, email } = JSON.parse(event.body);
 
     //get refrence to users's data
-    const ref = db.ref(`users/${userId}/userData`);
+    const ref = db.ref(`users/${userId}`);
 
-    ref.set({
+    await ref.set({
       name,
       email,
-      role: "user"
+      role: "student"
     });
     //return a response
     return {
