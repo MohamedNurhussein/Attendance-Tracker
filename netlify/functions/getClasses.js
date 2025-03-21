@@ -17,11 +17,10 @@ export const handler = async () => {
       // console.log("classData: ", classData);
       // add the class ID to the class object
       classes.push({
-        // id: classId,
         ...classData,
       });
-    }); //return a response
-    console.log("classes array: ", classes);
+    });
+    //return a response
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },

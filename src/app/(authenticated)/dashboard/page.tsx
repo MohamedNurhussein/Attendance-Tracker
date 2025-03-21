@@ -3,7 +3,7 @@ import { ComboboxForm } from "@/components/combobox-form";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import AdminTable from "../../records/admin-table";
-import UserTable from "../../records/student-table";
+import StudentTable from "../../records/student-table";
 import { Button } from "@/components/ui/button";
 
 export default function Page() {
@@ -49,14 +49,13 @@ export default function Page() {
       {isStudent ? (
         <div className="w-full max-w-sm">
           <ComboboxForm />
-          <UserTable />
+          <StudentTable userId={user.uid} />
         </div>
       ) : (
         <div>
           <div>
             <Button>Attendance History</Button>
             <AdminTable />
-            hello admin
           </div>
         </div>
       )}
