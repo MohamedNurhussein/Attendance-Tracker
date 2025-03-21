@@ -11,15 +11,16 @@ export const handler = async () => {
     //convert snapshot into an array
     const classes = [];
     snapshot.forEach((childSnapshot) => {
-      const classId = childSnapshot.key;
+      // const classId = childSnapshot.key;
+      // console.log("classId", classId);
       const classData = childSnapshot.val();
-
+      // console.log("classData: ", classData);
       // add the class ID to the class object
       classes.push({
-        id: classId,
         ...classData,
       });
-    }); //return a response
+    });
+    //return a response
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },

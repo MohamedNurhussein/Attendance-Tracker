@@ -1,87 +1,41 @@
+import { useEffect, useState } from "react";
 import { Records, columns } from "./student-columns";
 import { DataTable } from "./student-data-table";
 
-async function getData(): Promise<Records[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      recordId: "728ed52f",
-      date: "2022-01-01",
-      time: "09:00",
-      classId: "class A",
-    },
-    {
-      recordId: "758eu52f",
-      date: "2023-01-01",
-      time: "06:00",
-      classId: "class B",
-    },
-    {
-      recordId: "908ef52f",
-      date: "2025-01-01",
-      time: "13:00",
-      classId: "class C",
-    },
-    {
-      recordId: "9081f52f",
-      date: "2025-01-01",
-      time: "13:00",
-      classId: "class D",
-    },
-    {
-      recordId: "908efA2f",
-      date: "2025-01-01",
-      time: "13:00",
-      classId: "class E",
-    },
-    {
-      recordId: "908e1232f",
-      date: "2025-01-01",
-      time: "13:00",
-      classId: "class F",
-    },
-    {
-      recordId: "908ef52H",
-      date: "2025-01-01",
-      time: "13:00",
-      classId: "class G",
-    },
-    {
-      recordId: "908ef52i",
-      date: "2025-01-01",
-      time: "13:00",
-      classId: "class H",
-    },
-    {
-      recordId: "908ef51i",
-      date: "2025-01-01",
-      time: "13:00",
-      classId: "class I",
-    },
-    {
-      recordId: "908ef52j",
-      date: "2025-01-01",
-      time: "13:00",
-      classId: "class j",
-    },
-    {
-      recordId: "908eB52f",
-      date: "2025-01-01",
-      time: "13:00",
-      classId: "class K",
-    },
-    {
-      recordId: "908ef52L",
-      date: "2025-01-01",
-      time: "13:00",
-      classId: "class L",
-    },
-  ];
-}
+export default function DemoPage({ userId }) {
+  // const data = await getAttendanceData();
+  const [data, setData] = useState<Records[]>([]);
+  const [loading, setLoading] = useState(true);
 
-export default async function DemoPage() {
-  const data = await getData();
+  function getAttendanceData() {
+    // Fetch attendace data
+    fetch("/.netlify/functions/getStudentAttendance", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId: userId }),
+    })
+      .then((response) => response.json())
+      .then((body) => {
+        console.log("on client: ", body);
+        //get attendance data
+        setData(body.data);
+      })
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
+  }
+  useEffect(() => {
+    getAttendanceData();
+  },[]);//[data]
 
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-gray-900"></div>
+      </div>
+    );
+  }
   return (
     <div className="container mx-auto py-10">
       <DataTable columns={columns} data={data} />

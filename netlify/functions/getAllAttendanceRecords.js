@@ -1,15 +1,24 @@
+import { timeStamp } from "console";
 import db from "../../src/lib/firebase-admin";
-export const handler = async () => {//get method
+export const handler = async () => {
+  //get method
   try {
     //get refrence to attendance node
-    const attendanceRef = db.ref("attendance");
+    const attendanceRef = db.ref("/attendance");
     //get refrence to user node
-    const usersRef = db.ref("users");
+    const usersRef = db.ref("/users");
 
     //get all attendance records from db
     const attendanceSnapshot = await attendanceRef.once("value");
     //get all user from db
-    const users = await usersRef.once("value");
+    const usersSnapshot = await usersRef.once("value");
+
+    // Convert users to a map
+    const usersMap = {};
+    usersSnapshot.forEach((userSnapshot) => {
+      usersMap[userSnapshot.key] = userSnapshot.val();
+    });
+
     //convert snapshot into an array
     const records = [];
     attendanceSnapshot.forEach((childSnapshot) => {
@@ -17,7 +26,7 @@ export const handler = async () => {//get method
       const recordData = childSnapshot.val();
 
       //get user's data by userId
-      const user = users[recordData.userId];
+      const user = usersMap[recordData.userId];
 
       //add the record ID to the record object
       records.push({
@@ -29,6 +38,16 @@ export const handler = async () => {//get method
         classId: recordData.classId,
       });
     });
+
+    const now = new Date();
+    const formatedDate = now.toLocaleDateString();
+    console.log("formatedDate: ", formatedDate);
+    const formatedTime = now.toLocaleTimeString();//19:05:10
+    const [hour, minute, second] = formatedTime.split(":")
+    console.log("hour + : + minute: ", hour + ":" + minute)
+    console.log("formatedTime: ", formatedTime);
+
+    
     //return a response
     return {
       statusCode: 200,

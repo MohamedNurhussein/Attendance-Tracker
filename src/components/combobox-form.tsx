@@ -30,18 +30,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
-const Classes = [
-  { name: "Class A", value: "Class A" },
-  { name: "Class B", value: "Class B" },
-  { name: "Class C", value: "Class C" },
-  { name: "Class D", value: "Class D" },
-  { name: "Class E", value: "Class E" },
-  { name: "Class F", value: "Class F" },
-  { name: "Class G", value: "Class G" },
-  { name: "Class H", value: "Class H" },
-] as const;
-
+import { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 const FormSchema = z.object({
   Class: z.string({
     required_error: "Please select the class.",
@@ -49,19 +39,66 @@ const FormSchema = z.object({
 });
 
 export function ComboboxForm() {
+  const {user} = useAuth();
+  const [Classes, setClasses] = useState([{ name: "", value: "" }]);
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
-
+  // get classes from server side function
+  const getClasses = () => {
+    //start loading
+    setIsLoading(true);
+    //fetch classes
+    fetch("/.netlify/functions/getClasses", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => response.json())
+      .then((body) => {
+        //get classes from body
+        setClasses(body.data);
+      })
+      .catch((err) => console.error(err))
+      .finally(() => setIsLoading(false));
+  };
+  useEffect(() => {
+    getClasses();
+  }, []);
+  //call markAttendance from server side function
+  const markAttendance = (classId:string)=>{
+    //start loading
+    setIsLoading(true);
+    //fetch classes
+    fetch("/.netlify/functions/markAttendance", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: user.uid,
+        classId:classId,
+      }),
+    })
+      .then((response) => response.json())
+      .catch((err) => console.error(err))
+      .finally(() => setIsLoading(false));
+  }
   function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
-    toast("You submitted the following values:", {
+    toast("Attendance recorded successfully!", {
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
         </pre>
       ),
     });
+    markAttendance(data.Class);
+  }
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-gray-900"></div>
+      </div>
+    );
   }
   return (
     <Form {...form}>
@@ -84,9 +121,8 @@ export function ComboboxForm() {
                       )}
                     >
                       {field.value
-                        ? Classes.find(
-                            (Class) => Class.value === field.value
-                          )?.name
+                        ? Classes.find((Class) => Class.value === field.value)
+                            ?.name
                         : "Select Class"}
                       <ChevronsUpDown className="opacity-50" />
                     </Button>
