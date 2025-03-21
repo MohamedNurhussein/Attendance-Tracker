@@ -31,7 +31,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useEffect, useState } from "react";
-
+import { useAuth } from "@/context/AuthContext";
 const FormSchema = z.object({
   Class: z.string({
     required_error: "Please select the class.",
@@ -39,11 +39,13 @@ const FormSchema = z.object({
 });
 
 export function ComboboxForm() {
+  const {user} = useAuth();
   const [Classes, setClasses] = useState([{ name: "", value: "" }]);
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
+  // get classes from server side function
   const getClasses = () => {
     //start loading
     setIsLoading(true);
@@ -63,15 +65,33 @@ export function ComboboxForm() {
   useEffect(() => {
     getClasses();
   }, []);
+  //call markAttendance from server side function
+  const markAttendance = (classId:string)=>{
+    //start loading
+    setIsLoading(true);
+    //fetch classes
+    fetch("/.netlify/functions/markAttendance", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: user.uid,
+        classId:classId,
+      }),
+    })
+      .then((response) => response.json())
+      .catch((err) => console.error(err))
+      .finally(() => setIsLoading(false));
+  }
   function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
-    toast("You submitted the following values:", {
+    toast("Attendance recorded successfully!", {
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
         </pre>
       ),
     });
+    markAttendance(data.Class);
   }
   if (isLoading) {
     return (

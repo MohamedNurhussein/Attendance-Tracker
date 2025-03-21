@@ -18,7 +18,7 @@ export default function RouteGuard({ children }: { children: React.ReactNode }) 
       }
       
       // If user is logged in and on auth pages, redirect to dashboard
-      if (user && (pathname.includes("/login") || pathname.includes("/signup"))) {
+      if (user) {
         router.push("/dashboard");
       }
     }

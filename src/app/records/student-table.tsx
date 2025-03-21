@@ -27,7 +27,7 @@ export default function DemoPage({ userId }) {
   }
   useEffect(() => {
     getAttendanceData();
-  },[]);
+  },[]);//[data]
 
   if (loading) {
     return (

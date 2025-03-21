@@ -46,7 +46,7 @@ export default function Page() {
   
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-3 md:p-10">
-      {isStudent ? (
+      { user && isStudent ? (
         <div className="w-full max-w-sm">
           <ComboboxForm />
           <StudentTable userId={user.uid} />

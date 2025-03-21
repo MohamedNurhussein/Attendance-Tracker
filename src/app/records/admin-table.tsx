@@ -22,7 +22,7 @@ export default function DemoPage() {
 
   useEffect(() => {
     getAllRecords();
-  }, []);
+  }, [data]);
 
   if (loading) {
     return (
