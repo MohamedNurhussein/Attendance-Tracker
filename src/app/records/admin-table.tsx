@@ -1,9 +1,10 @@
+import { useEffect, useState } from "react";
 import { Records, columns } from "./admin-columns";
 import { DataTable } from "./admin-data-table";
 
-async function getData(): Promise<Records[]> {
+function getData(): Promise<Records[]> {
   // Fetch data from your API here.
-  return [
+  return Promise.resolve([
     {
       recordId: "728ed52f",
       username: "abc",
@@ -100,12 +101,27 @@ async function getData(): Promise<Records[]> {
       time: "13:00",
       classId: "class L",
     },
-  ];
+  ]);
 }
 
-export default async function DemoPage() {
-  const data = await getData();
+export default function DemoPage() {
+  // const data = await getData();
+  const [data, setData] = useState<Records[]>([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    getData()
+      .then((result) => setData(result))
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
+  });
 
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-gray-900"></div>
+      </div>
+    );
+  }
   return (
     <div className="container mx-auto py-10">
       <DataTable columns={columns} data={data} />

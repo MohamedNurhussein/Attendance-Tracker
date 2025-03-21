@@ -30,17 +30,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
-const Classes = [
-  { name: "Class A", value: "Class A" },
-  { name: "Class B", value: "Class B" },
-  { name: "Class C", value: "Class C" },
-  { name: "Class D", value: "Class D" },
-  { name: "Class E", value: "Class E" },
-  { name: "Class F", value: "Class F" },
-  { name: "Class G", value: "Class G" },
-  { name: "Class H", value: "Class H" },
-] as const;
+import { useEffect, useState } from "react";
 
 const FormSchema = z.object({
   Class: z.string({
@@ -49,10 +39,30 @@ const FormSchema = z.object({
 });
 
 export function ComboboxForm() {
+  const [Classes, setClasses] = useState([{ name: "", value: "" }]);
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
-
+  const getClasses = () => {
+    //start loading
+    setIsLoading(true);
+    //fetch classes
+    fetch("/.netlify/functions/getClasses", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => response.json())
+      .then((body) => {
+        //get classes from body
+        setClasses(body.data);
+      })
+      .catch((err) => console.error(err))
+      .finally(() => setIsLoading(false));
+  };
+  useEffect(() => {
+    getClasses();
+  }, []);
   function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
     toast("You submitted the following values:", {
@@ -62,6 +72,13 @@ export function ComboboxForm() {
         </pre>
       ),
     });
+  }
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-gray-900"></div>
+      </div>
+    );
   }
   return (
     <Form {...form}>
@@ -84,9 +101,8 @@ export function ComboboxForm() {
                       )}
                     >
                       {field.value
-                        ? Classes.find(
-                            (Class) => Class.value === field.value
-                          )?.name
+                        ? Classes.find((Class) => Class.value === field.value)
+                            ?.name
                         : "Select Class"}
                       <ChevronsUpDown className="opacity-50" />
                     </Button>

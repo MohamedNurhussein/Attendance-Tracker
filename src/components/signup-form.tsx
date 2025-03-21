@@ -23,6 +23,18 @@ export function SignupForm({
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const addDate=async()=>{
+    try{
+      await fetch("/.netlify/functions/addData",{
+        method: "POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({})
+      })
+    }catch(err){
+      console.erro(err)
+    }
+  }
   const handleSignup = async (e) => {
     e.preventDefault();
     //clear error message

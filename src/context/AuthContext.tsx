@@ -34,6 +34,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  const addData = (id, name: string, email: string) => {
+    return fetch("/.netlify/functions/addData", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: id,
+        name,
+        email,
+      }),
+    }).catch((err) => console.error("error while trying to add data: ",err));
+  };
+  
   // Listen for auth state changes
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -46,44 +58,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // Login with Firebase
-  const login = async (email: string, password: string) => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      router.push("/dashboard");
-    } catch (error) {
-      console.error("Login error:", error);
-      throw error;
-    }
+  const login = (email: string, password: string) => {
+    return signInWithEmailAndPassword(auth, email, password)
+      .then(() => router.push("/dashboard"))
+      .catch(error => {
+        console.error("Login error:", error);
+        throw error;
+      });
   };
 
   // Signup with Firebase
-  const signup = async (name: string, email: string, password: string) => {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      //add name
-      await updateProfile(userCredential.user, {
-        displayName: name,
+  const signup = (name: string, email: string, password: string) => {
+    return createUserWithEmailAndPassword(auth, email, password)
+      .then(userCredential => {
+        // Add name
+        return updateProfile(userCredential.user, {
+          displayName: name
+        }).then(() => userCredential);
+      })
+      .then(userCredential => {
+        // Add data to server side
+        return addData(userCredential.user.uid, name, email)
+          .then(() => userCredential);
+      })
+      .then(() => {
+        router.push("/dashboard");
+      })
+      .catch(error => {
+        console.error("Signup error:", error);
+        throw error;
       });
-      router.push("/dashboard");
-    } catch (error) {
-      console.error("Signup error:", error);
-      throw error;
-    }
   };
 
   // Logout with Firebase
-  const logout = async () => {
-    try {
-      await signOut(auth);
-      router.push("/login");
-    } catch (error) {
-      console.error("Logout error:", error);
-      throw error;
-    }
+  const logout = () => {
+    return signOut(auth)
+      .then(() => {
+        router.push("/login");
+      })
+      .catch(error => {
+        console.error("Logout error:", error);
+        throw error;
+      });
   };
 
   return (
