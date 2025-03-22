@@ -54,7 +54,7 @@ export function DataTable<TData, TValue>({
           onChange={(event) =>
             table.getColumn("classId")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm mr-4"
         />
         <Input
           placeholder="Filter emails..."
@@ -62,7 +62,7 @@ export function DataTable<TData, TValue>({
           onChange={(event) =>
             table.getColumn("email")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm "
         />
       </div>
       <div className="rounded-md border">

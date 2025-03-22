@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Records, columns } from "./student-columns";
 import { DataTable } from "./student-data-table";
 
-export default function DemoPage({ userId }) {
+export default function DemoPage({ userId, refreshTrigger }) {
   // const data = await getAttendanceData();
   const [data, setData] = useState<Records[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,9 +25,10 @@ export default function DemoPage({ userId }) {
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   }
+  console.log("on student-table: ", refreshTrigger);
   useEffect(() => {
     getAttendanceData();
-  },[]);//[data]
+  }, [refreshTrigger]); //[]
 
   if (loading) {
     return (
@@ -37,8 +38,10 @@ export default function DemoPage({ userId }) {
     );
   }
   return (
-    <div className="container mx-auto py-10">
+<div className="container mx-auto py-10">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold">My Attendance History</h2>
+      </div>
       <DataTable columns={columns} data={data} />
-    </div>
-  );
+    </div>  );
 }

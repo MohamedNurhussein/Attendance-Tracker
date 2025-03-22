@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { Records, columns } from "./admin-columns";
 import { DataTable } from "./admin-data-table";
 
-export default function DemoPage() {
+export default function DemoPage({refreshTrigger}) {
   const [data, setData] = useState<Records[]>([]);
   const [loading, setLoading] = useState(true);
+
   function getAllRecords() {
     // Fetch all records from server side
     fetch("/.netlify/functions/getAllAttendanceRecords", {
@@ -22,7 +23,7 @@ export default function DemoPage() {
 
   useEffect(() => {
     getAllRecords();
-  }, [data]);
+  }, [refreshTrigger]);
 
   if (loading) {
     return (

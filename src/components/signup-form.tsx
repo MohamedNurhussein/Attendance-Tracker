@@ -24,17 +24,6 @@ export function SignupForm({
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const addDate=async()=>{
-    try{
-      await fetch("/.netlify/functions/addData",{
-        method: "POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({})
-      })
-    }catch(err){
-      console.erro(err)
-    }
-  }
   const handleSignup = async (e) => {
     e.preventDefault();
     //clear error message
@@ -84,7 +73,7 @@ export function SignupForm({
   };
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
+      <Card className="py-6">
         <CardHeader>
           <CardTitle>Sign up</CardTitle>
           <CardDescription>
