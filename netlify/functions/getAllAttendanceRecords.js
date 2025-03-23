@@ -38,15 +38,6 @@ export const handler = async () => {
         classId: recordData.classId,
       });
     });
-
-    const now = new Date();
-    const formatedDate = now.toLocaleDateString();
-    console.log("formatedDate: ", formatedDate);
-    const formatedTime = now.toLocaleTimeString();//19:05:10
-    const [hour, minute, second] = formatedTime.split(":")
-    console.log("hour + : + minute: ", hour + ":" + minute)
-    console.log("formatedTime: ", formatedTime);
-
     
     //return a response
     return {
