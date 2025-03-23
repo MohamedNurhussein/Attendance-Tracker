@@ -1,39 +1,39 @@
 "use client";
-import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { EyeIcon, EyeOffIcon, AlertCircle } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-import { useAuth } from "@/context/AuthContext";
-export function SignupForm({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
-  const { signup } = useAuth();
+
+export function SignupForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
+  const { signup } = useAuth();
 
-  const handleSignup = async (e) => {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    //clear error message
     setError("");
-    //start loading
-    setIsLoading(true);
+
+    if (!name || !email || !password) {
+      setError("Please fill in all fields");
+      return;
+    }
+
     try {
+      setLoading(true);
       await signup(name, email, password);
       console.log("account been created successfully");
-    } catch (err) {
+      router.push("/dashboard");
+    } catch (err: any) {
+      // handle specific firebase error
       switch (err.code) {
         case "auth/invalid-email":
         case "auth/user-not-found":
@@ -61,73 +61,106 @@ export function SignupForm({
           break;
 
         default:
-          // Log the actual error for debugging
           console.error("Auth error:", err.code, err.message);
           setError("An error occurred. Please try again later.");
           break;
       }
     } finally {
-      //stop loading
-      setIsLoading(false);
+      setLoading(false);
     }
-  };
+  }
+
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="py-6">
-        <CardHeader>
-          <CardTitle>Sign up</CardTitle>
-          <CardDescription>
-            Enter your details below to create a new account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSignup}>
-            <div className="flex flex-col gap-6">
-              <Label htmlFor="name">Name</Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="name"
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-              <div className="grid gap-3">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="grid gap-3">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-              {error && <p className="text-red-500">{error}</p>}
-              <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "loading..." : "Sign up"}
-                </Button>
-              </div>
-            </div>
-            <div className="mt-4 text-center text-sm">
-              Already have an account?
-              <Link href="/login" className="underline underline-offset-4">
-                Login
-              </Link>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {error && (
+        <div className="bg-red-50 text-red-600 p-3 rounded-md flex items-center gap-2 text-sm">
+          <AlertCircle className="h-4 w-4" />
+          <span>{error}</span>
+        </div>
+      )}
+
+      <div className="space-y-2">
+        <Label htmlFor="name" className="text-gray-700">
+          Full Name
+        </Label>
+        <Input
+          id="name"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="John Doe"
+          className="h-11"
+          required
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="email" className="text-gray-700">
+          Email address
+        </Label>
+        <Input
+          id="email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="your@email.com"
+          className="h-11"
+          required
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="password" className="text-gray-700">
+          Password
+        </Label>
+        <div className="relative">
+          <Input
+            id="password"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Create a password"
+            className="h-11 pr-10"
+            required
+          />
+          <button
+            type="button"
+            className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-gray-600"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? (
+              <EyeOffIcon className="h-5 w-5" />
+            ) : (
+              <EyeIcon className="h-5 w-5" />
+            )}
+          </button>
+        </div>
+        <p className="text-xs text-gray-500 mt-1">
+          Password must be at least 6 characters
+        </p>
+      </div>
+
+      <Button
+        type="submit"
+        className="w-full h-11 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+        disabled={loading}
+      >
+        {loading ? (
+          <div className="flex items-center justify-center">
+            <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+            Creating account...
+          </div>
+        ) : (
+          "Create account"
+        )}
+      </Button>
+
+      <div className="text-center text-sm text-gray-600">
+        Already have an account?{" "}
+        <Link href="/login" className="text-blue-600 hover:underline font-medium">
+          Sign in
+        </Link>
+      </div>
+    </form>
   );
 }

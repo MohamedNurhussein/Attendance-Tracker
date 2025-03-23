@@ -31,6 +31,7 @@ export default function Page() {
       .then((response) => response.json())
       .then((body) => {
         const role = body.data;
+        console.log("-------------------------------------------------------getting role: ", role)
         setIsStudent(role === "student");//true if student; false if not
       })
       .catch((err) => {
