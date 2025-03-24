@@ -107,7 +107,7 @@ export default function Page() {
               <Card className="shadow-lg">
                 <CardContent className="p-3">
                   <StudentTable
-                    userId={user.uid}
+                    userId={user?.uid}
                     refreshTrigger={tableRefreshTrigger}
                   />
                 </CardContent>
