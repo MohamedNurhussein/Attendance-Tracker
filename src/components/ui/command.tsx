@@ -17,7 +17,7 @@ function Command({
   className,
   children,
   ...props
-}: React.ComponentPropsWithChildren<typeof CommandPrimitive>) {
+}: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <CommandPrimitive
       data-slot="command"
@@ -82,7 +82,7 @@ function CommandList({
   className,
   children,
   ...props
-}: React.ComponentPropsWithChildren<typeof CommandPrimitive.List>) {
+}: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <CommandPrimitive.List
       data-slot="command-list"
@@ -98,24 +98,26 @@ function CommandList({
 }
 
 function CommandEmpty({
+  className,
   children,
   ...props
-}: React.ComponentPropsWithChildren<typeof CommandPrimitive.Empty>) {
+}: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <CommandPrimitive.Empty
       data-slot="command-empty"
-      className="py-6 text-center text-sm"
+      className={cn("py-6 text-center text-sm", className)}
       {...props}
     >
       {children}
     </CommandPrimitive.Empty>
   );
 }
+
 function CommandGroup({
   className,
   children,
   ...props
-}: React.ComponentPropsWithChildren<typeof CommandPrimitive.Group>) {
+}: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <CommandPrimitive.Group
       data-slot="command-group"
@@ -147,7 +149,7 @@ function CommandItem({
   className,
   children,
   ...props
-}: React.ComponentPropsWithChildren<typeof CommandPrimitive.Item>) {
+}: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <CommandPrimitive.Item
       data-slot="command-item"
@@ -180,12 +182,19 @@ function CommandShortcut({
 
 export {
   Command,
-  CommandDialog,
-  CommandInput,
-  CommandList,
   CommandEmpty,
   CommandGroup,
+  CommandInput,
   CommandItem,
+  CommandList,
+
+  CommandDialog,
   CommandShortcut,
   CommandSeparator,
 };
+// Command,
+// CommandEmpty,
+// CommandGroup,
+// CommandInput,
+// CommandItem,
+// CommandList,
