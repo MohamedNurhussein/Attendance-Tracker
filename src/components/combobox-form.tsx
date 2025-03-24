@@ -38,7 +38,11 @@ const FormSchema = z.object({
   }),
 });
 
-export function ComboboxForm({ onAttendanceRecorded }) {
+export function ComboboxForm({
+  onAttendanceRecorded,
+}: {
+  onAttendanceRecorded: () => void;
+}) {
   const { user } = useAuth();
   const [Classes, setClasses] = useState([{ name: "", value: "" }]);
   const [isLoading, setIsLoading] = useState(false);
@@ -162,7 +166,7 @@ export function ComboboxForm({ onAttendanceRecorded }) {
                 </PopoverContent>
               </Popover>
               <FormDescription>
-              This is the class you are attending
+                This is the class you are attending
               </FormDescription>
               <FormMessage />
             </FormItem>

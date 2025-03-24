@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Records, columns } from "./admin-columns";
 import { DataTable } from "./admin-data-table";
 
-export default function DemoPage({refreshTrigger}) {
+export default function DemoPage({refreshTrigger}:{refreshTrigger:number}) {
   const [data, setData] = useState<Records[]>([]);
   const [loading, setLoading] = useState(true);
 

@@ -2,7 +2,13 @@ import { useCallback, useEffect, useState } from "react";
 import { Records, columns } from "./student-columns";
 import { DataTable } from "./student-data-table";
 
-export default function DemoPage({ userId, refreshTrigger }) {
+export default function DemoPage({
+  userId,
+  refreshTrigger,
+}: {
+  userId: string;
+  refreshTrigger: number;
+}) {
   // const data = await getAttendanceData();
   const [data, setData] = useState<Records[]>([]);
   const [loading, setLoading] = useState(true);
