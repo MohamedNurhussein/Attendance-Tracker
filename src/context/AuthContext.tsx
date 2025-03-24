@@ -25,7 +25,7 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  userLoggedIn: boolean;  
+  userLoggedIn: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -35,7 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const addData = (id, name: string, email: string) => {
+  const addData = (id: string, name: string, email: string) => {
     fetch("/.netlify/functions/addData", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
