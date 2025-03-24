@@ -32,7 +32,7 @@ export function SignupForm() {
       await signup(name, email, password);
       console.log("account been created successfully");
       router.push("/dashboard");
-    } catch (err: any) {
+    } catch (err: string) {
       // handle specific firebase error
       switch (err.code) {
         case "auth/invalid-email":
