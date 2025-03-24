@@ -13,12 +13,23 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-const ValidatedCommandPrimitive = CommandPrimitive as unknown as React.FC<any>;
-function Command({
-  className,
-  children,
-  ...props
-}: React.InputHTMLAttributes<HTMLInputElement>) {
+interface ValidatedCommandPrimitiveComponent
+  extends React.FC<React.HTMLAttributes<HTMLDivElement>> {
+  Input: React.ComponentType<React.InputHTMLAttributes<HTMLInputElement>>;
+  List: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
+  Empty: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
+  Group: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
+  Separator: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
+  Item: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
+}
+
+const ValidatedCommandPrimitive = CommandPrimitive as unknown as ValidatedCommandPrimitiveComponent;
+
+interface CommandProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+}
+
+function Command({ className, children, ...props }: CommandProps) {
   return (
     <ValidatedCommandPrimitive
       data-slot="command"
@@ -27,7 +38,7 @@ function Command({
         className
       )}
       {...props}
-    > 
+    >
       {children}
     </ValidatedCommandPrimitive>
   );
@@ -83,7 +94,7 @@ function CommandList({
   className,
   children,
   ...props
-}: React.InputHTMLAttributes<HTMLInputElement>) {
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <ValidatedCommandPrimitive.List
       data-slot="command-list"
@@ -102,7 +113,7 @@ function CommandEmpty({
   className,
   children,
   ...props
-}: React.InputHTMLAttributes<HTMLInputElement>) {
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <ValidatedCommandPrimitive.Empty
       data-slot="command-empty"
@@ -118,7 +129,7 @@ function CommandGroup({
   className,
   children,
   ...props
-}: React.InputHTMLAttributes<HTMLInputElement>) {
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <ValidatedCommandPrimitive.Group
       data-slot="command-group"
@@ -150,7 +161,7 @@ function CommandItem({
   className,
   children,
   ...props
-}: React.InputHTMLAttributes<HTMLInputElement>) {
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <ValidatedCommandPrimitive.Item
       data-slot="command-item"
@@ -188,14 +199,7 @@ export {
   CommandInput,
   CommandItem,
   CommandList,
-
   CommandDialog,
   CommandShortcut,
   CommandSeparator,
 };
-// Command,
-// CommandEmpty,
-// CommandGroup,
-// CommandInput,
-// CommandItem,
-// CommandList,
