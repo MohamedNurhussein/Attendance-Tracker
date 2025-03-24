@@ -11,7 +11,7 @@ export const handler = async (event) => {
     const snapshot = await userRef.once("value");
     //get role
     const role = snapshot.val();
-    
+
     //return response
     return {
       statusCode: 200,
@@ -22,7 +22,7 @@ export const handler = async (event) => {
       }),
     };
   } catch (err) {
-    console.error(err);
+    console.error("on get role: ", err);
     return {
       statusCode: 500,
       headers: { "Content-Type": "application/json" },
