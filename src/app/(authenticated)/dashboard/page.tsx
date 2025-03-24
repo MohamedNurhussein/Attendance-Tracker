@@ -7,9 +7,10 @@ import StudentTable from "../../records/student-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { CalendarIcon, ListIcon } from "lucide-react";
+import { redirect } from "next/navigation";
 
 export default function Page() {
-  const { user } = useAuth();
+  const { user, userLoggedIn } = useAuth();
   const [isStudent, setIsStudent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [tableRefreshTrigger, setTableRefreshTrigger] = useState(0);
@@ -21,12 +22,17 @@ export default function Page() {
     setActiveTab("history");
   };
 
+  //check if there is a user
+  if (!userLoggedIn) {
+    redirect("login");
+  }
+
   const checkRole = useCallback(() => {
     setLoading(true);
     fetch("/.netlify/functions/getRole", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: user.uid }),
+      body: JSON.stringify({ userId: user?.uid }),
     })
       .then((response) => response.json())
       .then((body) => {
