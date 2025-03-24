@@ -134,7 +134,7 @@ export function ComboboxForm({
                 </PopoverTrigger>
                 <PopoverContent className="w-[200px] p-0">
                   <Command>
-                    <CommandInput
+                    <CommandInput 
                       placeholder="Search class..."
                       className="h-9"
                     />
