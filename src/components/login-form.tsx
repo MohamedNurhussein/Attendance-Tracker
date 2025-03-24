@@ -32,7 +32,7 @@ export function LoginForm() {
       await login(email, password);
       console.log("successfuly logged in");
       router.push("/dashboard");
-    } catch (err: any) {
+    } catch (err: string) {
       // handle specific firebase error
       switch (err.code) {
         case "auth/invalid-email":

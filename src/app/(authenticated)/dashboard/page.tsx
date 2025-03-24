@@ -1,6 +1,6 @@
 "use client";
 import { ComboboxForm } from "@/components/combobox-form";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import AdminTable from "../../records/admin-table";
 import StudentTable from "../../records/student-table";
@@ -21,7 +21,7 @@ export default function Page() {
     setActiveTab("history");
   };
 
-  const checkRole = () => {
+  const checkRole = useCallback(() => {
     setLoading(true);
     fetch("/.netlify/functions/getRole", {
       method: "POST",
@@ -31,7 +31,7 @@ export default function Page() {
       .then((response) => response.json())
       .then((body) => {
         const role = body.data;
-        setIsStudent(role === "student");//true if student; false if not
+        setIsStudent(role === "student"); //true if student; false if not
       })
       .catch((err) => {
         console.error(err);
@@ -39,11 +39,11 @@ export default function Page() {
       .finally(() => {
         setLoading(false);
       });
-  };
+  }, [user]);
 
   useEffect(() => {
     checkRole();
-  }, []);
+  }, [user, checkRole]);
 
   if (loading) {
     return (
@@ -68,9 +68,16 @@ export default function Page() {
         </div>
 
         {user && isStudent ? (
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
             <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-6">
-              <TabsTrigger value="record" className="flex items-center pr-2 gap-2">
+              <TabsTrigger
+                value="record"
+                className="flex items-center pr-2 gap-2"
+              >
                 <CalendarIcon className="h-4 w-4" />
                 <span>Record Attendance</span>
               </TabsTrigger>
@@ -79,15 +86,17 @@ export default function Page() {
                 <span>History</span>
               </TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="record">
               <Card className="max-w-md py-4 mx-auto shadow-lg">
                 <CardContent className="pt-2">
-                  <ComboboxForm onAttendanceRecorded={handleAttendanceRecorded} />
+                  <ComboboxForm
+                    onAttendanceRecorded={handleAttendanceRecorded}
+                  />
                 </CardContent>
               </Card>
             </TabsContent>
-            
+
             <TabsContent value="history">
               <Card className="shadow-lg">
                 <CardContent className="p-3">

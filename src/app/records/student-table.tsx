@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Records, columns } from "./student-columns";
 import { DataTable } from "./student-data-table";
 
@@ -7,7 +7,7 @@ export default function DemoPage({ userId, refreshTrigger }) {
   const [data, setData] = useState<Records[]>([]);
   const [loading, setLoading] = useState(true);
 
-  function getAttendanceData() {
+  const getAttendanceData = useCallback(() => {
     // Fetch attendace data
     fetch("/.netlify/functions/getStudentAttendance", {
       method: "POST",
@@ -24,10 +24,10 @@ export default function DemoPage({ userId, refreshTrigger }) {
       })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
-  }
+  }, [userId]);
   useEffect(() => {
     getAttendanceData();
-  }, [refreshTrigger]); //[]
+  }, [refreshTrigger, getAttendanceData]); //[]
 
   if (loading) {
     return (
@@ -37,10 +37,11 @@ export default function DemoPage({ userId, refreshTrigger }) {
     );
   }
   return (
-<div className="container mx-auto py-10">
+    <div className="container mx-auto py-10">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">My Attendance History</h2>
       </div>
       <DataTable columns={columns} data={data} />
-    </div>  );
+    </div>
+  );
 }
