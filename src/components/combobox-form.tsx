@@ -38,10 +38,11 @@ const FormSchema = z.object({
   }),
 });
 
-export function ComboboxForm() {
-  const {user} = useAuth();
+export function ComboboxForm({ onAttendanceRecorded }) {
+  const { user } = useAuth();
   const [Classes, setClasses] = useState([{ name: "", value: "" }]);
   const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
@@ -66,7 +67,7 @@ export function ComboboxForm() {
     getClasses();
   }, []);
   //call markAttendance from server side function
-  const markAttendance = (classId:string)=>{
+  const markAttendance = (classId: string) => {
     //start loading
     setIsLoading(true);
     //fetch classes
@@ -75,28 +76,27 @@ export function ComboboxForm() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         userId: user.uid,
-        classId:classId,
+        classId: classId,
       }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        response.json();
+        //trigger change is happened
+        onAttendanceRecorded();
+      })
       .catch((err) => console.error(err))
       .finally(() => setIsLoading(false));
-  }
+  };
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
-    toast("Attendance recorded successfully!", {
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    //show toast
+    toast("Attendance recorded successfully!");
+    //call markAttendance function
     markAttendance(data.Class);
   }
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-gray-900"></div>
+      <div className="flex h-screen items-center justify-center bg-gradient-to-r from-blue-50 to-indigo-50">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-blue-500 border-blue-200"></div>
       </div>
     );
   }
@@ -162,7 +162,7 @@ export function ComboboxForm() {
                 </PopoverContent>
               </Popover>
               <FormDescription>
-                This is the class that you are attending.
+              This is the class you are attending
               </FormDescription>
               <FormMessage />
             </FormItem>

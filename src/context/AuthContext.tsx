@@ -25,6 +25,7 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  userLoggedIn: boolean;  
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -35,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   const addData = (id, name: string, email: string) => {
-    return fetch("/.netlify/functions/addData", {
+    fetch("/.netlify/functions/addData", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -43,9 +44,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         name,
         email,
       }),
-    }).catch((err) => console.error("error while trying to add data: ",err));
+    }).catch((err) => console.error("error while trying to add data: ", err));
   };
-  
+
   // Listen for auth state changes
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -61,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = (email: string, password: string) => {
     return signInWithEmailAndPassword(auth, email, password)
       .then(() => router.push("/dashboard"))
-      .catch(error => {
+      .catch((error) => {
         console.error("Login error:", error);
         throw error;
       });
@@ -70,21 +71,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Signup with Firebase
   const signup = (name: string, email: string, password: string) => {
     return createUserWithEmailAndPassword(auth, email, password)
-      .then(userCredential => {
+      .then((userCredential) => {
         // Add name
-        return updateProfile(userCredential.user, {
-          displayName: name
-        }).then(() => userCredential);
-      })
-      .then(userCredential => {
+        updateProfile(userCredential.user, {
+          displayName: name,
+        });
         // Add data to server side
-        return addData(userCredential.user.uid, name, email)
-          .then(() => userCredential);
+        addData(userCredential.user.uid, name, email);
       })
       .then(() => {
         router.push("/dashboard");
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Signup error:", error);
         throw error;
       });
@@ -94,16 +92,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     return signOut(auth)
       .then(() => {
+        console.log("loging out...");
         router.push("/login");
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Logout error:", error);
         throw error;
       });
   };
 
   return (
-    <AuthContext.Provider value={{ user, userLoggedIn: !!user, loading, login, signup, logout }}>
+    <AuthContext.Provider
+      value={{ user, userLoggedIn: !!user, loading, login, signup, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

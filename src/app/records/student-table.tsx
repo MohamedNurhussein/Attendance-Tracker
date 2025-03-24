@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Records, columns } from "./student-columns";
 import { DataTable } from "./student-data-table";
 
-export default function DemoPage({ userId }) {
+export default function DemoPage({ userId, refreshTrigger }) {
   // const data = await getAttendanceData();
   const [data, setData] = useState<Records[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,18 +27,20 @@ export default function DemoPage({ userId }) {
   }
   useEffect(() => {
     getAttendanceData();
-  },[]);//[data]
+  }, [refreshTrigger]); //[]
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-gray-900"></div>
+      <div className="flex h-screen items-center justify-center bg-gradient-to-r from-blue-50 to-indigo-50">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-blue-500 border-blue-200"></div>
       </div>
     );
   }
   return (
-    <div className="container mx-auto py-10">
+<div className="container mx-auto py-10">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold">My Attendance History</h2>
+      </div>
       <DataTable columns={columns} data={data} />
-    </div>
-  );
+    </div>  );
 }

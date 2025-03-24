@@ -1,4 +1,3 @@
-import { timeStamp } from "console";
 import db from "../../src/lib/firebase-admin";
 export const handler = async () => {
   //get method
@@ -31,22 +30,13 @@ export const handler = async () => {
       //add the record ID to the record object
       records.push({
         id: recordId,
-        username: user.name,
+        username: user.namje,
         email: user.email,
         date: recordData.date,
         time: recordData.time,
         classId: recordData.classId,
       });
     });
-
-    const now = new Date();
-    const formatedDate = now.toLocaleDateString();
-    console.log("formatedDate: ", formatedDate);
-    const formatedTime = now.toLocaleTimeString();//19:05:10
-    const [hour, minute, second] = formatedTime.split(":")
-    console.log("hour + : + minute: ", hour + ":" + minute)
-    console.log("formatedTime: ", formatedTime);
-
     
     //return a response
     return {

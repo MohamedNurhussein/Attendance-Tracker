@@ -1,5 +1,4 @@
 import db from "../../src/lib/firebase-admin";
-
 export const handler = async (event) => {
   try {
     //get data from body
