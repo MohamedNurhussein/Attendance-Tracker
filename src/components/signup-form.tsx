@@ -32,38 +32,42 @@ export function SignupForm() {
       await signup(name, email, password);
       console.log("account been created successfully");
       router.push("/dashboard");
-    } catch (err: string) {
-      // handle specific firebase error
-      switch (err.code) {
-        case "auth/invalid-email":
-        case "auth/user-not-found":
-        case "auth/wrong-password":
-        case "auth/invalid-credential":
-          setError("Invalid email or password. Please try again.");
-          break;
+    } catch (err: unknown) {
+      if (err && typeof err === "object" && "code" in err) {
+        // handle specific firebase error
+        switch (err.code) {
+          case "auth/invalid-email":
+          case "auth/user-not-found":
+          case "auth/wrong-password":
+          case "auth/invalid-credential":
+            setError("Invalid email or password. Please try again.");
+            break;
 
-        case "auth/email-already-in-use":
-          setError(
-            "An account with this email already exists. Please sign in or use a different email."
-          );
-          break;
+          case "auth/email-already-in-use":
+            setError(
+              "An account with this email already exists. Please sign in or use a different email."
+            );
+            break;
 
-        case "auth/weak-password":
-          setError(
-            "Please choose a stronger password (at least 6 characters)."
-          );
-          break;
+          case "auth/weak-password":
+            setError(
+              "Please choose a stronger password (at least 6 characters)."
+            );
+            break;
 
-        case "auth/network-request-failed":
-          setError(
-            "Network error. Please check your connection and try again."
-          );
-          break;
+          case "auth/network-request-failed":
+            setError(
+              "Network error. Please check your connection and try again."
+            );
+            break;
 
-        default:
-          console.error("Auth error:", err.code, err.message);
-          setError("An error occurred. Please try again later.");
-          break;
+          default:
+            setError("An error occurred. Please try again later.");
+            break;
+        }
+      } else {
+        // Handle other types of errors
+        console.error("Unexpected error:", err);
       }
     } finally {
       setLoading(false);
@@ -157,7 +161,10 @@ export function SignupForm() {
 
       <div className="text-center text-sm text-gray-600">
         Already have an account?{" "}
-        <Link href="/login" className="text-blue-600 hover:underline font-medium">
+        <Link
+          href="/login"
+          className="text-blue-600 hover:underline font-medium"
+        >
           Sign in
         </Link>
       </div>
