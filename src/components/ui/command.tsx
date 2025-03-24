@@ -13,22 +13,23 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
+const ValidatedCommandPrimitive = CommandPrimitive as unknown as React.FC<any>;
 function Command({
   className,
   children,
   ...props
 }: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
-    <CommandPrimitive
+    <ValidatedCommandPrimitive
       data-slot="command"
       className={cn(
         "bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md",
         className
       )}
       {...props}
-    >
+    > 
       {children}
-    </CommandPrimitive>
+    </ValidatedCommandPrimitive>
   );
 }
 
@@ -66,7 +67,7 @@ function CommandInput({
       className="flex h-9 items-center gap-2 border-b px-3"
     >
       <SearchIcon className="size-4 shrink-0 opacity-50" />
-      <CommandPrimitive.Input
+      <ValidatedCommandPrimitive.Input
         data-slot="command-input"
         className={cn(
           "placeholder:text-muted-foreground flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
@@ -84,7 +85,7 @@ function CommandList({
   ...props
 }: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
-    <CommandPrimitive.List
+    <ValidatedCommandPrimitive.List
       data-slot="command-list"
       className={cn(
         "max-h-[300px] scroll-py-1 overflow-x-hidden overflow-y-auto",
@@ -93,7 +94,7 @@ function CommandList({
       {...props}
     >
       {children}
-    </CommandPrimitive.List>
+    </ValidatedCommandPrimitive.List>
   );
 }
 
@@ -103,13 +104,13 @@ function CommandEmpty({
   ...props
 }: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
-    <CommandPrimitive.Empty
+    <ValidatedCommandPrimitive.Empty
       data-slot="command-empty"
       className={cn("py-6 text-center text-sm", className)}
       {...props}
     >
       {children}
-    </CommandPrimitive.Empty>
+    </ValidatedCommandPrimitive.Empty>
   );
 }
 
@@ -119,7 +120,7 @@ function CommandGroup({
   ...props
 }: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
-    <CommandPrimitive.Group
+    <ValidatedCommandPrimitive.Group
       data-slot="command-group"
       className={cn(
         "text-foreground [&_[cmdk-group-heading]]:text-muted-foreground overflow-hidden p-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium",
@@ -128,16 +129,16 @@ function CommandGroup({
       {...props}
     >
       {children}
-    </CommandPrimitive.Group>
+    </ValidatedCommandPrimitive.Group>
   );
 }
 
 function CommandSeparator({
   className,
   ...props
-}: React.ComponentProps<typeof CommandPrimitive.Separator>) {
+}: React.ComponentProps<typeof ValidatedCommandPrimitive.Separator>) {
   return (
-    <CommandPrimitive.Separator
+    <ValidatedCommandPrimitive.Separator
       data-slot="command-separator"
       className={cn("bg-border -mx-1 h-px", className)}
       {...props}
@@ -151,7 +152,7 @@ function CommandItem({
   ...props
 }: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
-    <CommandPrimitive.Item
+    <ValidatedCommandPrimitive.Item
       data-slot="command-item"
       className={cn(
         "data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
@@ -160,7 +161,7 @@ function CommandItem({
       {...props}
     >
       {children}
-    </CommandPrimitive.Item>
+    </ValidatedCommandPrimitive.Item>
   );
 }
 
