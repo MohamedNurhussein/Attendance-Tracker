@@ -1,8 +1,18 @@
+"use client"
 import { LoginForm } from "@/components/login-form";
 import { Calendar } from "lucide-react";
 import Link from "next/link";
-
+import {useAuth} from "@/context/AuthContext";
 export default function Page() {
+  const {userLoggedIn} = useAuth();
+  //check if user is logged in
+  if(userLoggedIn){
+    return (
+      <div className="flex h-screen items-center justify-center bg-gradient-to-r from-blue-50 to-indigo-50">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-blue-500 border-blue-200"></div>
+      </div>
+    );
+  }
   return (
     <div className="w-full space-y-6">
       {/* Mobile logo - only visible on mobile */}

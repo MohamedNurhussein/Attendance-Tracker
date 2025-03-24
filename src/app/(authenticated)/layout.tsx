@@ -15,7 +15,7 @@ export default function AuthenticatedLayout({
   return (
     <RouteGuard>
       <NavBar onLogout={logout} />
-      <div className="pt-16">
+      <div className="pt-13">
         {children}
       </div>
     </RouteGuard>

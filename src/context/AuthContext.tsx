@@ -25,6 +25,7 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  userLoggedIn: boolean;  
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);

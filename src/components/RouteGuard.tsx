@@ -34,10 +34,9 @@ export default function RouteGuard({
 
   // Show loading spinner while checking auth state
   if (loading) {
-    console.log("loading spinner: ", loading);
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-gray-900"></div>
+      <div className="flex h-screen items-center justify-center bg-gradient-to-r from-blue-50 to-indigo-50">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-blue-500 border-blue-200"></div>
       </div>
     );
   }

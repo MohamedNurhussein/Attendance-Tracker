@@ -1,4 +1,3 @@
-import { timeStamp } from "console";
 import db from "../../src/lib/firebase-admin";
 export const handler = async () => {
   //get method
@@ -31,7 +30,7 @@ export const handler = async () => {
       //add the record ID to the record object
       records.push({
         id: recordId,
-        username: user.name,
+        username: user.namje,
         email: user.email,
         date: recordData.date,
         time: recordData.time,

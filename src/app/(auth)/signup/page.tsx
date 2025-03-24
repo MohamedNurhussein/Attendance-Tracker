@@ -1,7 +1,17 @@
+"use client"
 import { SignupForm } from "@/components/signup-form";
 import { Calendar } from "lucide-react";
-
+import { useAuth } from "@/context/AuthContext";
 export default function Page() {
+  const {userLoggedIn} = useAuth();
+    //check if user is logged in
+    if(userLoggedIn){
+      return (
+        <div className="flex h-screen items-center justify-center bg-gradient-to-r from-blue-50 to-indigo-50">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-blue-500 border-blue-200"></div>
+        </div>
+      );
+    }
   return (
     <div className="w-full space-y-6">
       {/* Mobile logo - only visible on mobile */}
@@ -17,9 +27,7 @@ export default function Page() {
           <h2 className="text-2xl font-bold text-gray-900">Create an Account</h2>
           <p className="text-gray-600 mt-2">Join our attendance tracking system</p>
         </div>
-
         <SignupForm />
-
       </div>
 
       <div className="text-center text-xs text-gray-500 mt-8">
