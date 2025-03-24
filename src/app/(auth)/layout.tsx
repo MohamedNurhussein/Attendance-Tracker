@@ -1,4 +1,5 @@
 // app/(auth)/layout.tsx
+"use client"
 import RouteGuard from "@/components/RouteGuard";
 import { Calendar } from "lucide-react";
 

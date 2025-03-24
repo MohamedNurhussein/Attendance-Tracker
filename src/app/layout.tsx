@@ -1,9 +1,8 @@
-// app/layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
-import { AuthProvider } from "@/context/AuthContext";
+import ClientAuthProvider from "@/context/Client-side-Authentication";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -15,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Attendance System",
+  title: "Attendance Tracker",
   description: "A comprehensive attendance tracking system",
 };
 
@@ -29,10 +28,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
-        <main className="flex-grow">
-          <AuthProvider>{children}</AuthProvider>
-        </main>
-        <Toaster />
+        <ClientAuthProvider>
+          <main className="flex-grow">
+            {children}
+          </main>
+        </ClientAuthProvider>
       </body>
     </html>
   );

@@ -1,9 +1,8 @@
-// src/components/RouteGuard.tsx
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function RouteGuard({
   children,
@@ -13,27 +12,49 @@ export default function RouteGuard({
   const { user, loading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const [localLoading, setLocalLoading] = useState(true);
 
   useEffect(() => {
+    console.log('RouteGuard useEffect', { 
+      user: !!user, 
+      loading, 
+      pathname,
+      localLoading 
+    });
+
+    // Synchronize local loading state
     if (!loading) {
-      // If no user and not on auth pages, redirect to login
-      if (
-        !user &&
-        !pathname.includes("/login") &&
-        !pathname.includes("/signup")
-      ) {
-        router.push("/login");
+      setLocalLoading(false);
+    }
+  }, [user, loading, pathname]);
+
+  useEffect(() => {
+    if (!localLoading) {
+      const isAuthPage = pathname.includes("/login") || pathname.includes("/signup");
+      
+      console.log('Redirect checks', {
+        user: !!user,
+        isAuthPage,
+        pathname
+      });
+
+      // Redirect logic
+      if (!user && !isAuthPage) {
+        console.log('Redirecting to login');
+        router.replace("/login");
+        return;
       }
 
-      // If user is logged in and on auth pages, redirect to dashboard
-      if (user) {
-        router.push("/dashboard");
+      if (user && isAuthPage) {
+        console.log('Redirecting to dashboard');
+        router.replace("/dashboard");
+        return;
       }
     }
-  }, [user, loading, pathname, router]);
+  }, [user, localLoading, pathname, router]);
 
-  // Show loading spinner while checking auth state
-  if (loading) {
+  // Prevent rendering during loading
+  if (loading || localLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-gradient-to-r from-blue-50 to-indigo-50">
         <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-blue-500 border-blue-200"></div>
@@ -41,5 +62,5 @@ export default function RouteGuard({
     );
   }
 
-  return <>{children}</>;
+  return children;
 }
