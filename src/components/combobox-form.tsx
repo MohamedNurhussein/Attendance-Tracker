@@ -13,7 +13,7 @@ import {
   CommandEmpty,
   CommandGroup,
   CommandInput,
-  CommandItem,
+  CommandItem as OriginalCommandItem,
   CommandList,
 } from "@/components/ui/command";
 import {
@@ -32,6 +32,17 @@ import {
 } from "@/components/ui/popover";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+
+// Extend the CommandItem props to include the "value" prop.
+interface CommandItemProps extends React.HTMLAttributes<HTMLDivElement> {
+  value: string;
+  onSelect: () => void;
+  children: React.ReactNode;
+}
+
+// Cast the imported CommandItem to our extended type.
+const CommandItem = OriginalCommandItem as React.FC<CommandItemProps>;
+
 const FormSchema = z.object({
   Class: z.string({
     required_error: "Please select the class.",
@@ -50,31 +61,29 @@ export function ComboboxForm({
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
-  // get classes from server side function
+
+  // Fetch classes from the server side function.
   const getClasses = () => {
-    //start loading
     setIsLoading(true);
-    //fetch classes
     fetch("/.netlify/functions/getClasses", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     })
       .then((response) => response.json())
       .then((body) => {
-        //get classes from body
         setClasses(body.data);
       })
       .catch((err) => console.error(err))
       .finally(() => setIsLoading(false));
   };
+
   useEffect(() => {
     getClasses();
   }, []);
-  //call markAttendance from server side function
+
+  // Call markAttendance from the server side function.
   const markAttendance = (classId: string) => {
-    //start loading
     setIsLoading(true);
-    //fetch classes
     fetch("/.netlify/functions/markAttendance", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -85,18 +94,17 @@ export function ComboboxForm({
     })
       .then((response) => {
         response.json();
-        //trigger change is happened
         onAttendanceRecorded();
       })
       .catch((err) => console.error(err))
       .finally(() => setIsLoading(false));
   };
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    //show toast
     toast("Attendance recorded successfully!");
-    //call markAttendance function
     markAttendance(data.Class);
   }
+
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-gradient-to-r from-blue-50 to-indigo-50">
@@ -104,6 +112,7 @@ export function ComboboxForm({
       </div>
     );
   }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
