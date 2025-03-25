@@ -15,7 +15,7 @@ export const handler = async (event) => {
     //return response
     return {
       statusCode: 200,
-      header: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         message: "Role Retrieved successfully",
         data: role,

@@ -10,14 +10,11 @@ export const handler = async (event) => {
     }
     //get userId, date, time, classId from body
     const { userId, classId } = JSON.parse(event.body);
-    console.log("userId: " + userId)
-    console.log("classId: " + classId)
     //get timestamp
     const now = new Date();
     const formatedDate = now.toLocaleDateString();
     const formatedTime = now.toLocaleTimeString();
     const [hour, minute] = formatedTime.split(":");
-    console.log("hour + : + minute: ", hour + ":" + minute);
 
     //get refrence to attendance node
     const attendanceRef = db.ref("/attendance"); //attendance
@@ -32,6 +29,7 @@ export const handler = async (event) => {
     //return a response
     return {
       statusCode: 200,
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         message: "Record added successfully",
       }),

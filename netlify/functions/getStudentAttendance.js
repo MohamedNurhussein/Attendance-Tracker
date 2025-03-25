@@ -29,15 +29,16 @@ export const handler = async (event) => {
 
       //add the attendance ID to the attendance object
       attendance.push({
-        recordId:recordID,
+        recordId: recordID,
         date: record.date,
         time: record.time,
         classId: record.classId,
-      }); 
+      });
     });
     //return a response
     return {
       statusCode: 200,
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         message: "Attendance retrieved successfully",
         data: attendance,

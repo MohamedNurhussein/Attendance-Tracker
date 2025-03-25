@@ -12,9 +12,7 @@ export const handler = async () => {
     const classes = [];
     snapshot.forEach((childSnapshot) => {
       // const classId = childSnapshot.key;
-      // console.log("classId", classId);
       const classData = childSnapshot.val();
-      // console.log("classData: ", classData);
       // add the class ID to the class object
       classes.push({
         ...classData,

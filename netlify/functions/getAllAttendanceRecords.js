@@ -30,17 +30,17 @@ export const handler = async () => {
       //add the record ID to the record object
       records.push({
         id: recordId,
-        username: user.namje,
+        username: user.name,
         email: user.email,
         date: recordData.date,
         time: recordData.time,
         classId: recordData.classId,
       });
     });
-    
     //return a response
     return {
       statusCode: 200,
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         message: "All records retrieved successfully",
         data: records,
