@@ -1,6 +1,8 @@
 import db from "../../src/lib/firebase-admin";
 export const handler = async (event) => {
   try {
+    // Log environment variable existence
+    console.log("Firebase Admin initialized:", !!admin.apps.length);
     //get userId from body
     const { userId } = JSON.parse(event.body);
 
