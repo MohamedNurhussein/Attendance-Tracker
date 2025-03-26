@@ -27,12 +27,19 @@ export const handler = async () => {
         data: classes,
       }),
     };
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error("getClasses Full error details:", {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+    });
+
     return {
       statusCode: 500,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(`Error getting classes: ${err}`),
+      body: JSON.stringify({
+        error: "Internal Server Error",
+        details: error.message,
+      }),
     };
   }
 };

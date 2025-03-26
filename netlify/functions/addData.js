@@ -10,7 +10,7 @@ export const handler = async (event) => {
     await ref.set({
       name,
       email,
-      role: "student"
+      role: "student",
     });
     //return a response
     return {
@@ -18,12 +18,19 @@ export const handler = async (event) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify("Data added successfully"),
     };
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error("addData Full error details:", {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+    });
+
     return {
       statusCode: 500,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(`Error adding data: ${err}`),
+      body: JSON.stringify({
+        error: "Internal Server Error",
+        details: error.message,
+      }),
     };
   }
 };

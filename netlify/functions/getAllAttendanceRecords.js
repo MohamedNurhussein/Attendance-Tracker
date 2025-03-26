@@ -46,12 +46,19 @@ export const handler = async () => {
         data: records,
       }),
     };
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error("getAllAteendance Full error details:", {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+    });
+
     return {
       statusCode: 500,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(`Error Retrieving all records: ${err}`),
+      body: JSON.stringify({
+        error: "Internal Server Error",
+        details: error.message,
+      }),
     };
   }
 };

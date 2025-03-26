@@ -23,12 +23,19 @@ export const handler = async (event) => {
         data: role,
       }),
     };
-  } catch (err) {
-    console.error("on get role: ", err);
+  } catch (error) {
+    console.error("getRole Full error details:", {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+    });
+
     return {
       statusCode: 500,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(`Error retrieving role: ${err}`),
+      body: JSON.stringify({
+        error: "Internal Server Error",
+        details: error.message,
+      }),
     };
   }
 };
