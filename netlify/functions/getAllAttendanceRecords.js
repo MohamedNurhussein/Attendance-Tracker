@@ -8,9 +8,9 @@ export const handler = async () => {
     const usersRef = db.ref("/users");
 
     //get all attendance records from db
-    const attendanceSnapshot = await attendanceRef.once("value");
+    const attendanceSnapshot = await attendanceRef.get();
     //get all user from db
-    const usersSnapshot = await usersRef.once("value");
+    const usersSnapshot = await usersRef.get();
 
     // Convert users to a map
     const usersMap = {};

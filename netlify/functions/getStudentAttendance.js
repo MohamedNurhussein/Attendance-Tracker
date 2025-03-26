@@ -19,7 +19,7 @@ export const handler = async (event) => {
       .equalTo(userId);
 
     //get all records for this user
-    const snapshot = await userAttendanceQuery.once("value");
+    const snapshot = await userAttendanceQuery.get();
 
     //convert snapshot into an array
     const attendance = [];

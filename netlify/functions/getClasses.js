@@ -6,7 +6,7 @@ export const handler = async () => {
     const ref = db.ref("classes");
 
     //get all classes from db
-    const snapshot = await ref.once("value");
+    const snapshot = await ref.get();
 
     //convert snapshot into an array
     const classes = [];
