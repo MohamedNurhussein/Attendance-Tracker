@@ -1,20 +1,20 @@
-import db from "../../src/lib/firebase-admin";
+import { db } from "../../src/lib/firebase-admin";
+
 export const handler = async (event) => {
   try {
-    // Log environment variable existence
-    // console.log("Firebase Admin initialized:", !!admin.apps.length);
-    //get userId from body
+    // Parse the request body
     const { userId } = JSON.parse(event.body);
 
-    //get refrence to user's data
+    // Get reference to user's data
     const userRef = db.ref(`users/${userId}/role`);
 
-    //listen for "value" event once and get a snapshot
-    const snapshot = await userRef.once("value");
-    //get role
+    // Get the snapshot
+    const snapshot = await userRef.get();
+
+    // Get role
     const role = snapshot.val();
 
-    //return response
+    // Return response
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },

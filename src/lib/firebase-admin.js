@@ -1,5 +1,6 @@
 import admin from "firebase-admin";
 
+// Singleton pattern to ensure app is only initialized once
 if (!admin.apps.length) {
   try {
     let privateKey = process.env.FIREBASE_PRIVATE_KEY;
@@ -37,10 +38,10 @@ if (!admin.apps.length) {
     console.log("Firebase Admin initialized successfully");
   } catch (error) {
     console.error("Firebase Admin initialization error:", error);
-    // Re-throw the error so calling code can handle it
     throw new Error(`Firebase initialization failed: ${error.message}`);
   }
 }
 
-const db = admin.database();
-export default db;
+// Export the database instance
+export const db = admin.database();
+export default admin;
