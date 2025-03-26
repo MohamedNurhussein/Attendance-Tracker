@@ -1,4 +1,4 @@
-import db from "../../src/lib/firebase-admin";
+import { db } from "../../src/lib/firebase-admin";
 export const handler = async () => {
   //get method
   try {

@@ -1,12 +1,12 @@
-import db from "../../src/lib/firebase-admin";
+import { db } from "../../src/lib/firebase-admin";
 export const handler = async (event) => {
   //post
   try {
-    if(!event.body){
-        return{
-            statusCode:400,
-            body:JSON.stringify("body is required")
-        }
+    if (!event.body) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify("body is required"),
+      };
     }
     //get userId, date, time, classId from body
     const { userId, classId } = JSON.parse(event.body);
