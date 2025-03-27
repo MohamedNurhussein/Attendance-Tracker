@@ -10,11 +10,23 @@ export const handler = async (event) => {
     }
     //get userId, date, time, classId from body
     const { userId, classId } = JSON.parse(event.body);
-    
-    //get timestamp
-    const now = new Date();
-    const formatedDate = now.toLocaleDateString();
-    const formatedTime = now.toLocaleTimeString();
+
+    //get get data in egypt time
+    const now = new Date().toLocaleString("en-US", {
+      timeZone: "Africa/Cairo",
+      hour12: false,
+    });
+
+    //get edypt time
+    const egyptTime = new Date(now);
+
+    const formatedDate = egyptTime.toLocaleDateString("en-GB");
+    const formatedTime = egyptTime.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+      timeZone: "Africa/Cairo",
+    });
     const [hour, minute] = formatedTime.split(":");
 
     //get refrence to attendance node
