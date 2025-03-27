@@ -10,6 +10,7 @@ export const handler = async (event) => {
     }
     //get userId, date, time, classId from body
     const { userId, classId } = JSON.parse(event.body);
+    
     //get timestamp
     const now = new Date();
     const formatedDate = now.toLocaleDateString();

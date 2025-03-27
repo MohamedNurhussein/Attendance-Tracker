@@ -2,7 +2,7 @@
 import NavBar from "@/components/navBar";
 import RouteGuard from "@/components/RouteGuard";
 import { useAuth } from "@/context/AuthContext";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 
 export default function AuthenticatedLayout({
   children,
@@ -12,13 +12,13 @@ export default function AuthenticatedLayout({
   const auth = useAuth();
 
   // Add logging to help diagnose the issue
-  useEffect(() => {
-    console.log('AuthenticatedLayout mounted');
-    console.log('Current user:', auth.user);
-    return () => {
-      console.log('AuthenticatedLayout unmounted');
-    };
-  }, [auth]);
+  // useEffect(() => {
+  //   console.log('AuthenticatedLayout mounted');
+  //   console.log('Current user:', auth.user);
+  //   return () => {
+  //     console.log('AuthenticatedLayout unmounted');
+  //   };
+  // }, [auth]);
 
   return (
     <RouteGuard>

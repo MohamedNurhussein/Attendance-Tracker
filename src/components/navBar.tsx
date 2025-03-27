@@ -31,7 +31,7 @@ export default function NavBar({
       setIsLoading(false);
     } else if (user?.email) {
       // Extract name from email if display name not available
-      const emailName = user.email.split('@')[0];
+      const emailName = user.email.split("@")[0];
       setUserName(emailName.charAt(0).toUpperCase() + emailName.slice(1));
       setIsLoading(false);
     } else {
@@ -40,7 +40,7 @@ export default function NavBar({
   }, [user]);
 
   return (
-    <header 
+    <header
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
         scrolled ? "bg-white shadow-md" : "bg-white/95 backdrop-blur-sm"
       }`}
@@ -67,9 +67,9 @@ export default function NavBar({
                 <span className="font-medium">{userName}</span>
               </div>
             )}
-            <Button 
-              onClick={onLogout} 
-              variant="destructive" 
+            <Button
+              onClick={onLogout}
+              variant="destructive"
               size="sm"
               className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700"
             >
@@ -79,9 +79,9 @@ export default function NavBar({
 
           {/* Mobile menu button */}
           <div className="md:hidden">
-            <Button 
-              variant="ghost" 
-              size="sm" 
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="p-1"
             >
@@ -104,9 +104,9 @@ export default function NavBar({
               </div>
             )}
             <div>
-              <Button 
-                onClick={onLogout} 
-                variant="destructive" 
+              <Button
+                onClick={onLogout}
+                variant="destructive"
                 size="sm"
                 className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700"
               >

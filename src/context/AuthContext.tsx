@@ -34,8 +34,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const addData = (id: string, name: string, email: string) => {
-    fetch("/.netlify/functions/addData", {
+  const addData = async (id: string, name: string, email: string) => {
+    await fetch("/.netlify/functions/addData", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -49,9 +49,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Listen for auth state changes
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(
-      auth, 
+      auth,
       (user) => {
-        console.log('Auth state changed', !!user);
         setUser(user);
         setLoading(false);
       },
@@ -79,16 +78,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Signup with Firebase
   const signup = async (name: string, email: string, password: string) => {
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
       // Add name
       await updateProfile(userCredential.user, {
         displayName: name,
       });
-      
       // Add data to server side
-      addData(userCredential.user.uid, name, email);
-      
+      await addData(userCredential.user.uid, name, email);
+
       router.push("/dashboard");
     } catch (error) {
       console.error("Signup error:", error);
@@ -101,10 +103,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       // Clear any client-side state before signing out
       setUser(null);
-      
+
       // Sign out from Firebase
       await signOut(auth);
-      
+
       // Navigate to login page
       router.replace("/login");
     } catch (error) {

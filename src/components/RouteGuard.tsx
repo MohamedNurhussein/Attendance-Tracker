@@ -15,13 +15,6 @@ export default function RouteGuard({
   const [localLoading, setLocalLoading] = useState(true);
 
   useEffect(() => {
-    console.log('RouteGuard useEffect', { 
-      user: !!user, 
-      loading, 
-      pathname,
-      localLoading 
-    });
-
     // Synchronize local loading state
     if (!loading) {
       setLocalLoading(false);

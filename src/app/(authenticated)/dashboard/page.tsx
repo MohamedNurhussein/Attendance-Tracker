@@ -12,7 +12,7 @@ import { redirect } from "next/navigation";
 
 export default function Page() {
   const { user, userLoggedIn } = useAuth();
-  const [isStudent, setIsStudent] = useState(false);
+  const [isAdmin, setisAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [tableRefreshTrigger, setTableRefreshTrigger] = useState(0);
   const [activeTab, setActiveTab] = useState("record");
@@ -38,7 +38,7 @@ export default function Page() {
       .then((response) => response.json())
       .then((body) => {
         const role = body.data;
-        setIsStudent(role === "student"); //true if student; false if not
+        setisAdmin(role === "admin"); //true if admin; false if not
       })
       .catch((err) => {
         console.error(err);
@@ -65,16 +65,16 @@ export default function Page() {
       <div className="container mx-auto max-w-6xl">
         <div className="mb-6">
           <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-            {isStudent ? "Student Dashboard" : "Admin Dashboard"}
+            {isAdmin ? "Admin Dashboard" : "Student Dashboard"}
           </h1>
           <p className="text-gray-600 mt-2">
-            {isStudent
-              ? "Record your attendance and view your history"
-              : "Monitor and manage all attendance records"}
+            {isAdmin
+              ? "Monitor and manage all attendance records"
+              : "Record your attendance and view your history"}
           </p>
         </div>
 
-        {user && isStudent ? (
+        {user && !isAdmin ? (
           <Tabs
             value={activeTab}
             onValueChange={setActiveTab}
