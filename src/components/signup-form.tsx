@@ -107,7 +107,7 @@ export function SignupForm() {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="your@email.com"
+          placeholder="your@gmail.com"
           className="h-11"
           required
         />

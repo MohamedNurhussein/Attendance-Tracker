@@ -55,7 +55,7 @@ export default function NavBar({
               Attendance Tracker
             </h1>
             <h1 className="font-bold text-lg text-gray-900 sm:hidden">
-              A-Track
+              Attendance Tracker
             </h1>
           </div>
 
