@@ -57,6 +57,7 @@ export function ComboboxForm({
   const { user } = useAuth();
   const [Classes, setClasses] = useState([{ name: "", value: "" }]);
   const [isLoading, setIsLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -122,12 +123,13 @@ export function ComboboxForm({
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Class</FormLabel>
-              <Popover>
+              <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
                       variant="outline"
                       role="combobox"
+                      aria-expanded={open}
                       className={cn(
                         "w-[200px] justify-between",
                         !field.value && "text-muted-foreground"
@@ -143,7 +145,7 @@ export function ComboboxForm({
                 </PopoverTrigger>
                 <PopoverContent className="w-[200px] p-0">
                   <Command>
-                    <CommandInput 
+                    <CommandInput
                       placeholder="Search class..."
                       className="h-9"
                     />
@@ -156,6 +158,7 @@ export function ComboboxForm({
                             key={Class.value}
                             onSelect={() => {
                               form.setValue("Class", Class.value);
+                              setOpen(false);
                             }}
                           >
                             {Class.name}
